@@ -61,7 +61,6 @@ func TestGenerateExecute(t *testing.T) {
 
 func TestGeneratePollParse(t *testing.T) {
 	require.NoError(t, db.ClearCollections(task.Collection, host.Collection))
-
 	sc := &data.MockConnector{}
 	ctx := context.Background()
 
