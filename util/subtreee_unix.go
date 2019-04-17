@@ -1,4 +1,4 @@
-// +build linux
+// +build linux solaris
 
 package util
 
@@ -10,7 +10,7 @@ import (
 
 // listProc() returns a list of active pids on the system, by listing the contents of /proc
 // and looking for entries that appear to be valid pids. Only usable on systems with a /proc
-// filesystem (UNIX/Linux)
+// filesystem (Solaris and UNIX/Linux)
 func listProc() ([]int, error) {
 	d, err := os.Open("/proc")
 	if err != nil {
