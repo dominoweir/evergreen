@@ -128,7 +128,7 @@ func (s *cacheHistoryTestDataSuite) TestUpdateHourlyAndDailyStats() {
 	}
 
 	c := cacheHistoricalJobContext{
-		ProjectId: s.projectId,
+		ProjectID: s.projectId,
 		JobTime:   now,
 	}
 
@@ -158,7 +158,7 @@ func (s *cacheHistoryTestDataSuite) TestUpdateHourlyAndDailyStatsWithAnHourlyErr
 	}
 
 	c := cacheHistoricalJobContext{
-		ProjectId: s.projectId,
+		ProjectID: s.projectId,
 		JobTime:   time.Now(),
 	}
 	err := c.updateHourlyAndDailyStats(s.statsList, mockGenFns)
@@ -185,7 +185,7 @@ func (s *cacheHistoryTestDataSuite) TestUpdateHourlyAndDailyStatsWithADailyError
 	}
 
 	c := cacheHistoricalJobContext{
-		ProjectId: s.projectId,
+		ProjectID: s.projectId,
 		JobTime:   time.Now(),
 	}
 	err := c.updateHourlyAndDailyStats(s.statsList, mockGenFns)
@@ -206,7 +206,7 @@ func (s *cacheHistoryTestDataSuite) TestIteratorOverHourlyStats() {
 	}
 
 	c := cacheHistoricalJobContext{
-		ProjectId: s.projectId,
+		ProjectID: s.projectId,
 		JobTime:   time.Now(),
 	}
 	err := c.iteratorOverHourlyStats(s.statsList, mockHourlyGenerateFn, "hourly")
@@ -236,7 +236,7 @@ func (s *cacheHistoryTestDataSuite) TestIteratorOverDailyStats() {
 	}
 
 	c := cacheHistoricalJobContext{
-		ProjectId: s.projectId,
+		ProjectID: s.projectId,
 		JobTime:   time.Now(),
 	}
 	err := c.iteratorOverDailyStats(statsRollup, mockDailyGenerateFn, "daily")
@@ -464,6 +464,7 @@ func (s *cacheHistoryTestDataSuite) TestCacheHistoricalTestDataJob() {
 	s.createTestData(baseTime)
 
 	job := NewCacheHistoricalTestDataJob(s.projectId, "1")
+	job.(*cacheHistoricalTestDataJob).Requesters = []string{s.requester}
 	job.Run(context.Background())
 	s.NoError(job.Error())
 
