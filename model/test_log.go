@@ -3,8 +3,11 @@ package model
 import (
 	"fmt"
 
+	"github.com/evergreen-ci/evergreen"
 	"github.com/evergreen-ci/evergreen/db"
 	"github.com/mongodb/anser/bsonutil"
+	"github.com/mongodb/grip"
+	"github.com/mongodb/grip/message"
 	"github.com/pkg/errors"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -92,7 +95,17 @@ func (self *TestLog) Validate() error {
 // URL returns the path to access the log based on its current fields.
 // Does not error if fields are not set.
 func (self *TestLog) URL() string {
-	return fmt.Sprintf("/test_log/%v/%v/%v",
+	settings, err := evergreen.GetConfig()
+	if err != nil {
+		grip.Debug(message.WrapError(err, message.Fields{
+			"message":   "error getting config",
+			"operation": "set test url",
+			"task":      self.Task,
+		}))
+		return ""
+	}
+	return fmt.Sprintf("%v/test_log/%v/%v/%v",
+		settings.Ui.Url,
 		self.Task,
 		self.TaskExecution,
 		self.Name,
