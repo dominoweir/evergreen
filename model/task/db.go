@@ -692,7 +692,7 @@ func FindOneOldNoMerge(query db.Q) (*Task, error) {
 // FindOneOldNoMergeByIdAndExecution finds a task from the old tasks collection without test results.
 func FindOneOldNoMergeByIdAndExecution(id string, execution int) (*Task, error) {
 	query := db.Query(bson.M{
-		OldTaskIdKey: id,
+		IdKey:        id,
 		ExecutionKey: execution,
 	})
 	return FindOneOldNoMerge(query)
