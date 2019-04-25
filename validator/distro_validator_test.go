@@ -38,6 +38,9 @@ func TestCheckDistro(t *testing.T) {
 				PlannerSettings: distro.PlannerSettings{
 					Version: evergreen.PlannerVersionTunable,
 				},
+				FinderSettings: distro.FinderSettings{
+					Version: evergreen.FinderVersionLegacy,
+				},
 				BootstrapMethod: distro.BootstrapMethodLegacySSH,
 			}
 			verrs, err := CheckDistro(ctx, d, conf, true)
@@ -77,6 +80,9 @@ func TestCheckDistro(t *testing.T) {
 				},
 				PlannerSettings: distro.PlannerSettings{
 					Version: evergreen.PlannerVersionTunable,
+				},
+				FinderSettings: distro.FinderSettings{
+					Version: evergreen.FinderVersionLegacy,
 				},
 				BootstrapMethod: distro.BootstrapMethodLegacySSH,
 			}
