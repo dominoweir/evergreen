@@ -492,7 +492,7 @@ func TestTaskQueueGenerationTimes(t *testing.T) {
 	now := time.Now().Round(time.Millisecond)
 	taskQueue := &TaskQueue{
 		Distro:      "foo",
-		GeneratedAt: now.UTC(),
+		GeneratedAt: now,
 	}
 
 	assert.NoError(db.Insert(TaskQueuesCollection, taskQueue))
