@@ -889,8 +889,11 @@ func TestMarkEnd(t *testing.T) {
 func TestTryResetTask(t *testing.T) {
 	Convey("With a task, a build, version and a project", t, func() {
 		Convey("resetting a task without a max number of executions", func() {
-			testutil.HandleTestingErr(db.ClearCollections(task.Collection, task.OldCollection, build.Collection, VersionCollection), t,
+			testutil.HandleTestingErr(db.ClearCollections(task.Collection, task.OldCollection, build.Collection, VersionCollection, ProjectRefCollection), t,
 				"Error clearing task and build collections")
+			p := &ProjectRef{Identifier: "sample"}
+			So(p.Insert(), ShouldBeNil)
+
 			displayName := "testName"
 			userName := "testUser"
 			b := &build.Build{
@@ -926,10 +929,12 @@ func TestTryResetTask(t *testing.T) {
 
 			b.Tasks = []build.TaskCache{
 				{
-					Id: testTask.Id,
+					Id:        testTask.Id,
+					Activated: false,
 				},
 				{
-					Id: otherTask.Id,
+					Id:        otherTask.Id,
+					Activated: true,
 				},
 			}
 
@@ -946,6 +951,7 @@ func TestTryResetTask(t *testing.T) {
 				So(testTask.Details, ShouldResemble, apimodels.TaskEndDetail{})
 				So(testTask.Status, ShouldEqual, evergreen.TaskUndispatched)
 				So(testTask.FinishTime, ShouldResemble, util.ZeroTime)
+				So(testTask.Activated, ShouldBeTrue)
 				oldTaskId := fmt.Sprintf("%v_%v", testTask.Id, 1)
 				fmt.Println(oldTaskId)
 				oldTask, err := task.FindOneOld(task.ById(oldTaskId))
@@ -959,6 +965,7 @@ func TestTryResetTask(t *testing.T) {
 				buildFromDb, err := build.FindOne(build.ById(b.Id))
 				So(err, ShouldBeNil)
 				So(buildFromDb.Status, ShouldEqual, evergreen.BuildStarted)
+				So(buildFromDb.Tasks[0].Activated, ShouldBeTrue)
 			})
 
 		})
